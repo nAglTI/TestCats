@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.nagl.test_cats_task.data.repository.CatsRepository
+import com.nagl.test_cats_task.data.repository.CatsRepositoryImpl
 import com.nagl.test_cats_task.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -20,9 +20,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var catsRepository: CatsRepository
+    lateinit var catsRepositoryImpl: CatsRepositoryImpl
 
-    private val catsViewModel: CatsViewModel by viewModels { CatsViewModelFactory(catsRepository) }
+    private val catsViewModel: CatsViewModel by viewModels { CatsViewModelFactory(catsRepositoryImpl) }
 
     //private val homeViewModel: HomeViewModel by viewModels()
 

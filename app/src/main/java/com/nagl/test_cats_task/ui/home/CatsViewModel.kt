@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.nagl.test_cats_task.data.repository.CatsRepository
+import com.nagl.test_cats_task.data.repository.CatsRepositoryImpl
 
 
-class CatsViewModelFactory(private val repository: CatsRepository) : ViewModelProvider.Factory {
+class CatsViewModelFactory(private val repository: CatsRepositoryImpl) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CatsViewModel::class.java)) {
             return CatsViewModel(repository) as T
@@ -17,7 +17,7 @@ class CatsViewModelFactory(private val repository: CatsRepository) : ViewModelPr
 }
 
 // TODO: di catsRepository
-class CatsViewModel(private val repository: CatsRepository) : ViewModel() {
+class CatsViewModel(private val repository: CatsRepositoryImpl) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
