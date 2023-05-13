@@ -6,13 +6,14 @@ import com.nagl.test_cats_task.network.CatService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import com.nagl.test_cats_task.utils.Result
-import java.lang.Exception
 import javax.inject.Inject
+import kotlin.Exception
 
 class CatRemoteDataSourceImpl @Inject constructor(
     private val catService: CatService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): CatRemoteDataSource {
+    // TODO: solve null problem (mb implement own exception)
     override suspend fun getImagesByPage(page: Int): Result<List<NetworkCat>> =
         withContext(ioDispatcher) {
             return@withContext try {
