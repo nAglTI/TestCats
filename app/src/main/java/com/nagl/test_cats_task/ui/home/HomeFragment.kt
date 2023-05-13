@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), CatListAdapter.OnElementEndListener {
+class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -27,10 +27,9 @@ class HomeFragment : Fragment(), CatListAdapter.OnElementEndListener {
     lateinit var catsRepositoryImpl: CatsRepositoryImpl
 
     private val catsViewModel: CatsViewModel by viewModels { CatsViewModelFactory(catsRepositoryImpl) }
-    private val catListAdapter by lazy { CatListAdapter(this) }
-    //private val homeViewModel: HomeViewModel by viewModels()
+    private val catListAdapter by lazy { CatListAdapter() }
 
-    //todo: implement api https://api.thecatapi.com/v1/images/search?limit=30&page=2&order=ASC&api_key=live_r4PYFFHwfGbX5HizUiv0d9Vtg2E6psMJ5yISMlngaOev4llQ2JDHuNjKj7JagoXA
+    // TODO: implement favorites (new fragment, save in DB instance, add new logic to CatItem and CatListAdapter); on click BottomSheetDialogFragment with cat info.
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,10 +79,6 @@ class HomeFragment : Fragment(), CatListAdapter.OnElementEndListener {
                 binding.swipeRefreshCats.isRefreshing = it
             }
         }
-    }
-
-    override fun loadMoreData(page: Int) {
-        catsViewModel.loadCats(page)
     }
 
     override fun onDestroyView() {
