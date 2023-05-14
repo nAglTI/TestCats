@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nagl.test_cats_task.data.model.domain.Cat
+import com.nagl.test_cats_task.data.repository.CatsRepository
 import com.nagl.test_cats_task.data.repository.CatsRepositoryImpl
 import com.nagl.test_cats_task.utils.Result
 import kotlinx.coroutines.launch
 
 
-class CatsViewModelFactory(private val repository: CatsRepositoryImpl) : ViewModelProvider.Factory {
+class CatsViewModelFactory(private val repository: CatsRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CatsViewModel::class.java)) {
             return CatsViewModel(repository) as T
@@ -21,14 +22,14 @@ class CatsViewModelFactory(private val repository: CatsRepositoryImpl) : ViewMod
 }
 
 // TODO: UI states: loading, error, etc.
-class CatsViewModel(private val repository: CatsRepositoryImpl) : ViewModel() {
+class CatsViewModel(private val repository: CatsRepository) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
     val text: LiveData<String> = _text
 
-    val adapterCatList = mutableListOf<Cat>()
+    //val adapterCatList = mutableListOf<Cat>()
 
     private val _catsList = MutableLiveData<List<Cat>?>()
     val catsList: LiveData<List<Cat>?> = _catsList

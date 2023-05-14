@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nagl.test_cats_task.data.repository.CatsRepository
 import com.nagl.test_cats_task.data.repository.CatsRepositoryImpl
 import com.nagl.test_cats_task.databinding.FragmentHomeBinding
 import com.nagl.test_cats_task.utils.NetworkUtils
@@ -24,12 +25,13 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var catsRepositoryImpl: CatsRepositoryImpl
+    lateinit var catsRepositoryImpl: CatsRepository
 
     private val catsViewModel: CatsViewModel by viewModels { CatsViewModelFactory(catsRepositoryImpl) }
     private val catListAdapter by lazy { CatListAdapter() }
 
     // TODO: implement favorites (new fragment, save in DB instance, add new logic to CatItem and CatListAdapter); on click BottomSheetDialogFragment with cat info.
+    // Implement Paging
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,16 +52,19 @@ class HomeFragment : Fragment() {
 
     private fun initListeners() {
         binding.swipeRefreshCats.setOnRefreshListener {
+            //catsViewModel.adapterCatList.clear()
+            catListAdapter.submitList(null)
+            catListAdapter.notifyItemRangeRemoved(0, catListAdapter.itemCount)
             catsViewModel.loadCats(0)
-            catsViewModel.adapterCatList.clear()
         }
 
+        // TODO: improve load condition
         binding.catsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as GridLayoutManager?
                 val lastVisiblePosition = layoutManager!!.findLastVisibleItemPosition()
-                if (lastVisiblePosition >= catListAdapter.itemCount - 15 && !binding.swipeRefreshCats.isRefreshing) {
+                if (lastVisiblePosition >= catListAdapter.itemCount - 30 && !binding.swipeRefreshCats.isRefreshing) {
                     catsViewModel.loadCats(catListAdapter.itemCount / NetworkUtils.IMAGE_COUNT)
                 }
             }
@@ -70,8 +75,11 @@ class HomeFragment : Fragment() {
         with(catsViewModel) {
             catsList.observe(viewLifecycleOwner) {
                 if (it != null) {
-                    catsViewModel.adapterCatList.addAll(it)
-                    catListAdapter.submitList(catsViewModel.adapterCatList)
+                    val count = catListAdapter.itemCount
+                    //catsViewModel.adapterCatList.addAll(it)
+                    if (count == 0) catListAdapter.submitList(it)
+                    else catListAdapter.submitList(catListAdapter.currentList + it)
+                    catListAdapter.notifyItemRangeInserted(count, NetworkUtils.IMAGE_COUNT)
                     binding.catListEmpty.visibility = View.GONE
                 }
             }
