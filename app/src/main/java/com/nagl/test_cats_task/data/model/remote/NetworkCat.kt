@@ -7,5 +7,7 @@ data class NetworkCat(
     @SerializedName("id")
     val id: String,
     @SerializedName("url")
-    val url: String
+    val url: String,
+    @SerializedName("breeds")
+    val breeds: List<NetworkBreed>
 )

@@ -11,6 +11,7 @@ interface CatService {
     suspend fun getCatsImagesByPage(
         @Query("page") page: Int,
         @Query("limit") limit: Int = NetworkUtils.IMAGE_COUNT,
-        @Query("order") order: String = "ASC"
+        @Query("order") order: String = "ASC",
+        @Query("has_breeds") hasBreeds: Int = 1,
     ): Response<List<NetworkCat>>
 }
