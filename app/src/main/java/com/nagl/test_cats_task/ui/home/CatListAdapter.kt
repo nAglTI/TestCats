@@ -10,7 +10,7 @@ import coil.transform.RoundedCornersTransformation
 import com.nagl.test_cats_task.data.model.domain.Cat
 import com.nagl.test_cats_task.databinding.ItemCatBinding
 
-class CatListAdapter(): ListAdapter<Cat, CatListAdapter.CatViewHolder>(CatDiffCallback()) {
+class CatListAdapter(private val delegate: OnItemClickCallback): ListAdapter<Cat, CatListAdapter.CatViewHolder>(CatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatViewHolder {
         return CatViewHolder(
@@ -21,7 +21,11 @@ class CatListAdapter(): ListAdapter<Cat, CatListAdapter.CatViewHolder>(CatDiffCa
     }
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val cat = getItem(position)
+        holder.itemView.setOnClickListener {
+            delegate.onItemClick(cat)
+        }
+        holder.bind(cat)
     }
     class CatViewHolder(private val binding: ItemCatBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(cat: Cat) {
@@ -30,6 +34,10 @@ class CatListAdapter(): ListAdapter<Cat, CatListAdapter.CatViewHolder>(CatDiffCa
 //                transformations(RoundedCornersTransformation(12.5f))
 //            }
         }
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClick(cat: Cat)
     }
 
     class CatDiffCallback: DiffUtil.ItemCallback<Cat>() {

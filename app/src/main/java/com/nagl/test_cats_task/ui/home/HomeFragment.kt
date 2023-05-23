@@ -9,16 +9,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nagl.test_cats_task.data.model.domain.Cat
 import com.nagl.test_cats_task.data.repository.CatsRepository
 import com.nagl.test_cats_task.data.repository.CatsRepositoryImpl
 import com.nagl.test_cats_task.databinding.FragmentHomeBinding
+import com.nagl.test_cats_task.ui.home.catDetail.CatBottomSheetFragment
 import com.nagl.test_cats_task.utils.NetworkUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), CatListAdapter.OnItemClickCallback {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -28,10 +30,10 @@ class HomeFragment : Fragment() {
     lateinit var catsRepositoryImpl: CatsRepository
 
     private val catsViewModel: CatsViewModel by viewModels { CatsViewModelFactory(catsRepositoryImpl) }
-    private val catListAdapter by lazy { CatListAdapter() }
+    private val catListAdapter by lazy { CatListAdapter(this) }
 
     // TODO: implement favorites (new fragment, save in DB instance, add new logic to CatItem and CatListAdapter); on click BottomSheetDialogFragment with cat info.
-    // Implement Paging
+    // TODO: mb Implement Paging
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +60,6 @@ class HomeFragment : Fragment() {
             catsViewModel.loadCats(0)
         }
 
-        // TODO: improve load condition
         binding.catsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -92,5 +93,13 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(cat: Cat) {
+        CatBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("cat", cat)
+            }
+        }.show(childFragmentManager, "CatDetailFragment")
     }
 }

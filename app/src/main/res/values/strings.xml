@@ -3,6 +3,12 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="cats_list_empty">Список пуст</string>
-    <string name="cats_list_title">Список котов</string>
+    <string name="cats_list_empty">List is empty</string>
+    <string name="cats_list_title">Cat list</string>
+
+    <string name="cat_detail_country">Country: %1$s</string>
+    <string name="cat_detail_life_span">Life span: %1$s</string>
+    <string name="cat_detail_temperament">Temperament: %1$s</string>
+    <string name="cat_detail_description">Description: %1$s</string>
+    <string name="cat_detail_wiki_url">Wiki: %1$s</string>
 </resources>
